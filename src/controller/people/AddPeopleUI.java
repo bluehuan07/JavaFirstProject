@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import controller.LoginUI;
 import dao.impl.PeopleDaoImpl;
 import model.People;
+import util.cal;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -59,11 +60,11 @@ public class AddPeopleUI extends JFrame {
 	 */
 	public AddPeopleUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension scrsize = Toolkit.getDefaultToolkit().getScreenSize();	
+		Dimension scrsize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = 450;
 		int height = 500;
-		int x = (int)((scrsize.getWidth()-width)/2);
-		int y = (int)((scrsize.getHeight()-height)/2);
+		int x = (int) ((scrsize.getWidth() - width) / 2);
+		int y = (int) ((scrsize.getHeight() - height) / 2);
 		setBounds(100, 100, width, height);
 		setBounds(x, y, width, height);
 		contentPane = new JPanel();
@@ -89,46 +90,49 @@ public class AddPeopleUI extends JFrame {
 		panel_1.setBounds(10, 50, 416, 401);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
+		
 
-		JLabel lblNewLabel_1 = new JLabel("姓名");
-		lblNewLabel_1.setBounds(10, 37, 46, 15);
-		panel_1.add(lblNewLabel_1);
-
-		name = new JTextField();
-		name.setBounds(119, 34, 96, 21);
-		panel_1.add(name);
-		name.setColumns(10);
-
-		JLabel lblNewLabel_2 = new JLabel("帳號");
-		lblNewLabel_2.setBounds(10, 89, 46, 15);
-		panel_1.add(lblNewLabel_2);
+		People p = (People)(cal.readFile("peopleError.txt"));
+		
+		JLabel lblNewLabel_1_1 = new JLabel("帳號");
+		lblNewLabel_1_1.setBounds(10, 37, 46, 15);
+		panel_1.add(lblNewLabel_1_1);
 
 		username = new JTextField();
-		username.setBounds(119, 86, 96, 21);
+		username.setBounds(119, 34, 96, 21);
 		panel_1.add(username);
 		username.setColumns(10);
 
-		JLabel lblNewLabel_3 = new JLabel("密碼");
-		lblNewLabel_3.setBounds(10, 141, 46, 15);
-		panel_1.add(lblNewLabel_3);
+		JLabel lblNewLabel_1_2 = new JLabel("密碼");
+		lblNewLabel_1_2.setBounds(10, 89, 46, 15);
+		panel_1.add(lblNewLabel_1_2);
 
 		password = new JTextField();
-		password.setBounds(119, 138, 96, 21);
+		password.setBounds(119, 86, 96, 21);
 		panel_1.add(password);
 		password.setColumns(10);
 
-		JLabel lblNewLabel_4 = new JLabel("戶籍地址");
-		lblNewLabel_4.setBounds(10, 193, 85, 15);
-		panel_1.add(lblNewLabel_4);
+		JLabel lblNewLabel_1_3 = new JLabel("姓名");
+		lblNewLabel_1_3.setBounds(10, 141, 46, 15);
+		panel_1.add(lblNewLabel_1_3);
+
+		name = new JTextField();
+		name.setBounds(119, 138, 96, 21);
+		panel_1.add(name);
+		name.setColumns(10);
+
+		JLabel lblNewLabel_1_4 = new JLabel("戶籍地址");
+		lblNewLabel_1_4.setBounds(10, 193, 85, 15);
+		panel_1.add(lblNewLabel_1_4);
 
 		address1 = new JTextField();
 		address1.setBounds(119, 190, 96, 21);
 		panel_1.add(address1);
 		address1.setColumns(10);
 
-		JLabel lblNewLabel_6 = new JLabel("通訊地址");
-		lblNewLabel_6.setBounds(10, 245, 85, 15);
-		panel_1.add(lblNewLabel_6);
+		JLabel lblNewLabel_1_5 = new JLabel("通訊地址");
+		lblNewLabel_1_5.setBounds(10, 245, 85, 15);
+		panel_1.add(lblNewLabel_1_5);
 
 		address2 = new JTextField();
 		address2.setBounds(119, 242, 96, 21);
@@ -138,28 +142,28 @@ public class AddPeopleUI extends JFrame {
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("同戶籍地址");
 		rdbtnNewRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(rdbtnNewRadioButton.isSelected()) {
+				if (rdbtnNewRadioButton.isSelected()) {
 					address2.setText(address1.getText());
-				}else {
+				} else {
 					address2.setText("");
-				}		
+				}
 			}
 		});
 		rdbtnNewRadioButton.setBounds(221, 241, 107, 23);
 		panel_1.add(rdbtnNewRadioButton);
 
-		JLabel lblNewLabel_7 = new JLabel("出生日期");
-		lblNewLabel_7.setBounds(10, 297, 85, 15);
-		panel_1.add(lblNewLabel_7);
+		JLabel lblNewLabel_1_6 = new JLabel("出生日期");
+		lblNewLabel_1_6.setBounds(10, 297, 85, 15);
+		panel_1.add(lblNewLabel_1_6);
 
 		birthday = new JTextField();
 		birthday.setBounds(119, 294, 96, 21);
 		panel_1.add(birthday);
 		birthday.setColumns(10);
 
-		JLabel lblNewLabel_5 = new JLabel("電話");
-		lblNewLabel_5.setBounds(10, 349, 46, 15);
-		panel_1.add(lblNewLabel_5);
+		JLabel lblNewLabel_1_7 = new JLabel("電話");
+		lblNewLabel_1_7.setBounds(10, 349, 46, 15);
+		panel_1.add(lblNewLabel_1_7);
 
 		tel = new JTextField();
 		tel.setBounds(119, 346, 96, 21);
@@ -200,7 +204,7 @@ public class AddPeopleUI extends JFrame {
 			}
 		});
 
-		/*回到登入畫面 */
+		/* 回到登入畫面 */
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

@@ -38,7 +38,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
 public class LoginUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -123,9 +122,22 @@ public class LoginUI extends JFrame {
 		username = new JTextField();
 		username.setFont(new Font("微軟正黑體", Font.PLAIN, 16));
 		username.setColumns(10);
-		username.setText("輸入帳號");
-		username.setForeground(Color.gray);
-		username.setHorizontalAlignment(JTextField.CENTER);
+		if (cal.existsFile("peopleRemember.txt")) {
+			People p = (People) (cal.readFile("peopleRemember.txt"));
+			System.out.println(p.getUsername());
+			if (p.getUsername().equals("")) {
+				System.out.println(p.getPassword());
+				username.setText("輸入帳號");
+				username.setForeground(Color.gray);
+				username.setHorizontalAlignment(JTextField.CENTER);
+			} else {
+				username.setText(p.getUsername());
+			}
+		} else {
+			username.setText("輸入帳號");
+			username.setForeground(Color.gray);
+			username.setHorizontalAlignment(JTextField.CENTER);
+		}
 		username.setBounds(153, 60, 149, 45);
 		panel_2.add(username);
 
@@ -144,9 +156,22 @@ public class LoginUI extends JFrame {
 		password = new JPasswordField();
 		password.setFont(new Font("微軟正黑體", Font.PLAIN, 17));
 		password.setColumns(6);
-		password.setText("輸入密碼");
-		password.setForeground(Color.gray);
-		password.setHorizontalAlignment(JTextField.CENTER);
+		if (cal.existsFile("peopleRemember.txt")) {
+			People p = (People) (cal.readFile("peopleRemember.txt"));
+			if (p.getPassword().equals("")) {
+				System.out.println(p.getPassword());
+				password.setText("輸入密碼");
+				password.setForeground(Color.gray);
+				password.setHorizontalAlignment(JTextField.CENTER);
+			} else {
+				password.setText(p.getPassword());
+			}
+		} else {
+			password.setText("輸入密碼");
+			password.setForeground(Color.gray);
+			password.setHorizontalAlignment(JTextField.CENTER);
+		}
+
 		panel_2_1.add(password);
 
 		JCheckBox chckbxNewCheckBox = new JCheckBox();
@@ -200,6 +225,7 @@ public class LoginUI extends JFrame {
 					username.setHorizontalAlignment(JTextField.LEFT);
 				}
 			}
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (username.getText().equals("")) {
@@ -252,7 +278,14 @@ public class LoginUI extends JFrame {
 				if (p != null) {
 					System.out.println(p.getPassword());
 					if (p.getPassword().equals(pw)) {
-						cal.saveFile("people.txt", p);
+						if(cal.existsFile("peopleRemember.txt")) {
+							People pr = (People) (cal.readFile("peopleRemember.txt"));
+							if (!pr.getUsername().equals(p.getUsername())) {
+								cal.deletdFile("peopleRemember.txt");
+								System.out.println("刪除peopleRemember");
+							}
+						}
+						cal.saveFile("peopleSuccess.txt", p);
 						LoginSuccessUI frame = new LoginSuccessUI();
 						frame.setVisible(true);
 						dispose();
@@ -261,6 +294,9 @@ public class LoginUI extends JFrame {
 					}
 
 				} else {
+					p.setUsername(un);
+					p.setPassword(pw);
+					cal.saveFile("peopleError.txt", p);
 					LoginErrorUI frame = new LoginErrorUI();
 					frame.setVisible(true);
 					dispose();
@@ -282,7 +318,17 @@ public class LoginUI extends JFrame {
 		/* 跳出提示視窗 */
 		btnNewButton_3_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(LoginUI.this, "假的沒功能");
+				String un = username.getText();
+				String pw = new String(password.getPassword());
+				if (un.equals("") || un.equals("輸入帳號") || pw.equals("輸入密碼") || pw.equals("")) {
+					JOptionPane.showMessageDialog(LoginUI.this, "帳號或密碼未輸入");
+				} else {
+					People p = new People();
+					p.setUsername(un);
+					p.setPassword(pw);
+					cal.saveFile("peopleRemember.txt", p);
+					JOptionPane.showMessageDialog(LoginUI.this, "已記住");
+				}
 			}
 		});
 		btnNewButton_3_2.addActionListener(new ActionListener() {

@@ -4,10 +4,13 @@ import java.util.List;
 
 import model.People;
 
-/* 管理會員資料庫-->CRUD--->method名-->SQL */
 public interface PeopleDao {
 	/* create */
-	void addPeople(String username, String password,String name, String address1, String address2,String birthday,String tel);
+	void addPeople(String username, String password, String name, String address1, String address2, String birthday,
+			String tel);
+
+	void addPeople(String username, String password, String name, String address1, String address2, String birthday,
+			String tel, String level);
 
 	void addPeople(People p);
 

@@ -1,11 +1,15 @@
 package model;
 
-public class Drink {
+import java.io.Serializable;
 
+public class Drink implements Serializable {
+
+	private int idbrink; // 不顯示
+	private String username;
 	private String name;
-	private int peach;
-	private int melon;
-	private int brown;
+	private int peach; // 密桃奶茶 60
+	private int melon; // 冷露歐雷 65
+	private int brown; // 黑糖鮮奶 75
 
 	public Drink() {
 		super();
@@ -17,6 +21,23 @@ public class Drink {
 		this.peach = peach;
 		this.melon = melon;
 		this.brown = brown;
+	}
+
+	public Drink(String username, String name, int peach, int melon, int brown) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.peach = peach;
+		this.melon = melon;
+		this.brown = brown;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getName() {

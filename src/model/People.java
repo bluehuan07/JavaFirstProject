@@ -11,6 +11,7 @@ public class People implements Serializable {
 	private String address2;
 	private String birthday;
 	private String tel;
+	private String level;
 
 	public People() {
 		super();
@@ -27,6 +28,19 @@ public class People implements Serializable {
 		this.address2 = address2;
 		this.birthday = birthday;
 		this.tel = tel;
+	}
+
+	public People(String username, String password, String name, String address1, String address2, String birthday,
+			String tel, String level) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.birthday = birthday;
+		this.tel = tel;
+		this.level = level;
 	}
 
 	public Integer getIdpeople() {
@@ -91,6 +105,14 @@ public class People implements Serializable {
 
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 }

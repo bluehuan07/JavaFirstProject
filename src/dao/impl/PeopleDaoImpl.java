@@ -65,9 +65,34 @@ public class PeopleDaoImpl implements PeopleDao {
 	}
 
 	@Override
+	public void addPeople(String username, String password, String name, String address1, String address2,
+			String birthday, String tel, String level) {
+		Connection conn = DbConnection.getDb();
+		String SQL = "INSERT INTO people(username,password,name,address1,address2,birthday,tel,level) VALUES(?,?,?,?,?,?,?,?)";
+		try {
+			PreparedStatement ps = conn.prepareStatement(SQL);
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ps.setString(3, name);
+			ps.setString(4, address1);
+			ps.setString(5, address2);
+			ps.setString(6, birthday);
+			ps.setString(7, tel);
+			ps.setString(8, level);
+			ps.executeUpdate();
+			System.out.println("addPeople Success");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("addPeople Error");
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
 	public void addPeople(People p) {
 		Connection conn = DbConnection.getDb();
-		String SQL = "INSERT INTO people(username,password,name,address1,address2,birthday,tel) VALUES(?,?,?,?,?,?,?)";
+		String SQL = "INSERT INTO people(username,password,name,address1,address2,birthday,tel,level) VALUES(?,?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement ps = conn.prepareStatement(SQL);
 			ps.setString(1, p.getUsername());
@@ -77,6 +102,7 @@ public class PeopleDaoImpl implements PeopleDao {
 			ps.setString(5, p.getAddress2());
 			ps.setString(6, p.getBirthday());
 			ps.setString(7, p.getTel());
+			ps.setString(8, p.getLevel());
 			ps.executeUpdate();
 			System.out.println("addPeople Success");
 		} catch (SQLException e) {
@@ -105,6 +131,7 @@ public class PeopleDaoImpl implements PeopleDao {
 				p.setAddress2(rs.getString("address2"));
 				p.setBirthday(rs.getString("birthday"));
 				p.setTel(rs.getString("tel"));
+				p.setLevel(rs.getString("level"));
 				l.add(p);
 			}
 			System.out.println("queryAllList Success");
@@ -124,16 +151,16 @@ public class PeopleDaoImpl implements PeopleDao {
 		try {
 			PreparedStatement ps = conn.prepareStatement(SQL);
 			ResultSet rs = ps.executeQuery();
-			show = "id\t帳號\t密碼\t名字\t戶籍地址1\t通訊地址2\t生日\t電話\n";
+			show = " 帳號\t密碼\t名字\t戶籍地址1\t通訊地址2\t生日\t電話\t等級\n";
 			while (rs.next()) {
-				show = show + rs.getInt("idpeople") + "\t";
-				show = show + rs.getString("username") + "\t";
+				show = show + " " + rs.getString("username") + "\t";
 				show = show + rs.getString("password") + "\t";
 				show = show + rs.getString("name") + "\t";
 				show = show + rs.getString("address1") + "\t";
 				show = show + rs.getString("address2") + "\t";
 				show = show + rs.getString("birthday") + "\t";
-				show = show + rs.getString("tel") + "\n";
+				show = show + rs.getString("tel") + "\t";
+				show = show + rs.getString("level") + "\n";
 			}
 			System.out.println("queryAllString Success");
 		} catch (SQLException e) {
@@ -163,6 +190,7 @@ public class PeopleDaoImpl implements PeopleDao {
 				p.setAddress2(rs.getString("address2"));
 				p.setBirthday(rs.getString("birthday"));
 				p.setTel(rs.getString("tel"));
+				p.setLevel(rs.getString("level"));
 			}
 			System.out.println("queryPeopleById Success");
 		} catch (SQLException e) {
@@ -170,7 +198,6 @@ public class PeopleDaoImpl implements PeopleDao {
 			System.out.println("queryPeopleById Error");
 			e.printStackTrace();
 		}
-
 		return p;
 	}
 
@@ -193,6 +220,7 @@ public class PeopleDaoImpl implements PeopleDao {
 				p.setAddress2(rs.getString("address2"));
 				p.setBirthday(rs.getString("birthday"));
 				p.setTel(rs.getString("tel"));
+				p.setLevel(rs.getString("level"));
 			}
 			System.out.println("queryPeopleByUsername Success");
 		} catch (SQLException e) {
@@ -224,6 +252,7 @@ public class PeopleDaoImpl implements PeopleDao {
 				p.setAddress2(rs.getString("address2"));
 				p.setBirthday(rs.getString("birthday"));
 				p.setTel(rs.getString("tel"));
+				p.setLevel(rs.getString("level"));
 			}
 			System.out.println("queryPeople Success");
 		} catch (SQLException e) {
@@ -238,7 +267,7 @@ public class PeopleDaoImpl implements PeopleDao {
 	@Override
 	public void updatePeopleById(People p) {
 		Connection conn = DbConnection.getDb();
-		String SQL = "update people set password=?,name=?,address1=?,address2=?,birthday=?,tel=? where idpeople=?";
+		String SQL = "update people set password=?,name=?,address1=?,address2=?,birthday=?,tel=?,level=? where idpeople=?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(SQL);
 			ps.setString(1, p.getPassword());
@@ -247,7 +276,8 @@ public class PeopleDaoImpl implements PeopleDao {
 			ps.setString(4, p.getAddress2());
 			ps.setString(5, p.getBirthday());
 			ps.setString(6, p.getTel());
-			ps.setInt(7, p.getIdpeople());		
+			ps.setString(7, p.getLevel());
+			ps.setInt(8, p.getIdpeople());
 			ps.executeUpdate();
 			System.out.println("updatePeopleById Success");
 		} catch (SQLException e) {
@@ -261,7 +291,7 @@ public class PeopleDaoImpl implements PeopleDao {
 	@Override
 	public void updatePeopleByUsername(People p) {
 		Connection conn = DbConnection.getDb();
-		String SQL = "update people set password=?,name=?,address1=?,address2=?,birthday=?,tel=? where username=?";
+		String SQL = "update people set password=?,name=?,address1=?,address2=?,birthday=?,tel=?,level=? where username=?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(SQL);
 			ps.setString(1, p.getPassword());
@@ -270,7 +300,8 @@ public class PeopleDaoImpl implements PeopleDao {
 			ps.setString(4, p.getAddress2());
 			ps.setString(5, p.getBirthday());
 			ps.setString(6, p.getTel());
-			ps.setString(7, p.getUsername());
+			ps.setString(7, p.getLevel());
+			ps.setString(8, p.getUsername());
 			ps.executeUpdate();
 			System.out.println("updatePeopleByUsername Success");
 		} catch (SQLException e) {
