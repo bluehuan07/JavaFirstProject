@@ -1,0 +1,266 @@
+/** 老師是否可以將記事本字體改為 Consolas 謝謝 **/
+/** 與上次相同的程式碼或老師教的就沒放上來了 **/
+/** 帳號：abc 密碼：001 等級：員工 **/
+/** 帳號：zxc 密碼：kkk 等級：白金會員 **/
+/** 帳號：uio 密碼：005 等級：一般會員 **/
+
+/** https://github.com/bluehuan07/JavaFirstProject **/
+
+/* 物件 */
+
+	People{
+		private Integer idpeople; //沒顯示
+		private String username;
+		private String password;
+		private String name;
+		private String address1;
+		private String address2;
+		private String birthday;
+		private String tel;
+		private String level; // 分三個等級 員工 白金會員 一般會員
+		/* 員工可以修改全部人的資料，會員只能修改或刪除自己 */
+		/* 新註冊會員皆是一般會員，需用員工帳號才能修改等級 */
+	}
+	Drink{
+		private int idbrink; // 不顯示
+		private String username; // 可以查詢歷史紀錄
+		private String name;
+		private int peach; // 密桃奶茶 60
+		private int melon; // 冷露歐雷 65
+		private int brown; // 黑糖鮮奶 75
+	}
+
+/* 登入畫面 LoginUI */
+
+	/* 記住帳號密碼 文字框呈現的編碼 */
+	if (cal.existsFile("peopleRemember.txt")) {
+		People p = (People) (cal.readFile("peopleRemember.txt"));
+		System.out.println(p.getUsername());
+		if (p.getUsername().equals("")) {
+			System.out.println(p.getPassword());
+			username.setText("輸入帳號");
+			username.setForeground(Color.gray);
+			username.setHorizontalAlignment(JTextField.CENTER);
+		} else {
+			username.setText(p.getUsername());
+		}
+	} else {
+		username.setText("輸入帳號");
+		username.setForeground(Color.gray);
+		username.setHorizontalAlignment(JTextField.CENTER);
+	}
+	username.setBounds(153, 60, 149, 45);
+	panel_2.add(username);
+	/* 記住帳號 */
+	btnNewButton_3_1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			String un = username.getText();
+			String pw = new String(password.getPassword());
+			if (un.equals("") || un.equals("輸入帳號") || pw.equals("輸入密碼") || pw.equals("")) {
+				JOptionPane.showMessageDialog(LoginUI.this, "帳號或密碼未輸入");
+			} else {
+				People p = new People();
+				p.setUsername(un);
+				p.setPassword(pw);
+				cal.saveFile("peopleRemember.txt", p);
+				JOptionPane.showMessageDialog(LoginUI.this, "已記住");
+			}
+		}
+	});
+	/* 取消記住 */ 
+	/* 在讀寫檔案皆結束時需要.close() 不然無法刪除檔案 */
+	btnNewButton_3_4.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(cal.existsFile("peopleRemember.txt")) {
+				cal.deletdFile("peopleRemember.txt");
+			}
+		}
+	});
+	/* 登入 */
+	btnNewButton_2_1.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			String un = username.getText();
+			String pw = new String(password.getPassword());
+			People p = new PeopleDaoImpl().queryPeopleByUsername(un);
+			if (p != null) {
+				System.out.println(p.getPassword());
+				/* 判斷密碼是否正確 */
+				if (p.getPassword().equals(pw)) { 
+					/* 如果記憶的帳號與登入不同刪除記憶帳號 */
+					if (cal.existsFile("peopleRemember.txt")) {
+						People pr = (People) (cal.readFile("peopleRemember.txt"));
+						if (!pr.getUsername().equals(p.getUsername())) {
+							cal.deletdFile("peopleRemember.txt");
+							System.out.println("刪除peopleRemember");
+						}
+					}
+					cal.saveFile("peopleSuccess.txt", p);
+					LoginSuccessUI frame = new LoginSuccessUI();
+					frame.setVisible(true);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(LoginUI.this, "密碼錯誤");
+				}
+			/* 無帳號傳到後方註冊時先填寫好帳號密碼 */
+			} else {
+				p = new People();
+				p.setUsername(un);
+				p.setPassword(pw);
+				System.out.println("username:" + p.getUsername() + "\tpassword:" + p.getUsername());
+				cal.saveFile("peopleError.txt", p);
+				LoginErrorUI frame = new LoginErrorUI();
+				frame.setVisible(true);
+				dispose();
+			}
+		}
+	});
+
+/* 註冊 AddPeopleUI */
+
+	username.setBounds(119, 34, 96, 21);
+	/* 如果是註冊失敗會先填入在登入畫面的帳號密碼 */
+	if (cal.existsFile("peopleError.txt")) {
+		People p = (People) (cal.readFile("peopleError.txt"));
+		System.out.println("username:"+p.getUsername()+"\tpassword:"+p.getUsername());
+		username.setText(p.getUsername());
+	}
+
+/* 登入成功 LoginSuccessUI */
+
+	/* 修改會員資料 員工可修改權限較大 */
+	btnNewButton_2.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			switch (p.getLevel()) {
+			case "A": {
+				PeopleUI frame = new PeopleUI();
+				frame.setVisible(true);
+				dispose();
+				break;
+			}
+			case "B": {
+				PeopleMemberUI frame = new PeopleMemberUI();
+				frame.setVisible(true);
+				dispose();
+				break;
+			}
+			case "C": {
+				PeopleMemberUI frame = new PeopleMemberUI();
+				frame.setVisible(true);
+				dispose();
+				break;
+			}
+			}
+		}
+	});
+
+/* 訂購畫面 DrinkUI */
+
+	/* 從購物車回來時保留填寫的數量 */
+	if (cal.existsFile("drink.txt")) {
+		Drink d = (Drink) (cal.readFile("drink.txt"));
+		peach.setText("" + d.getPeach());
+	} else {
+		peach.setText("1杯60元");
+		peach.setHorizontalAlignment(JTextField.CENTER);
+		peach.setForeground(Color.gray);
+	}
+	/* 跳到購物車 */
+	btnNewButton.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			/* 如果不輸入0也可以，但全部至少一杯 */
+			String Peach = peach.getText();
+			if (Peach.equals("1杯60元")) {
+				Peach = "0";
+			}
+			String Melon = melon.getText();
+			if (Melon.equals("1杯65元")) {
+				Melon = "0";
+			}
+			String Brown = brown.getText();
+			if (Brown.equals("1杯75元")) {
+				Brown = "0";
+			}
+
+			Integer P = Integer.parseInt(Peach);// Boxing
+			Integer M = Integer.parseInt(Melon);
+			Integer B = Integer.parseInt(Brown);
+			Integer tmp = P + M + B;
+			if (tmp == 0) {
+				JOptionPane.showMessageDialog(DrinkUI.this, "未選任何一杯");
+			} else {
+				d = new Drink(p.getUsername(), p.getName(), P, M, B);
+				cal.saveFile("drink.txt", d);
+				ConfirmUI frame = new ConfirmUI();
+				frame.setVisible(true);
+				dispose();
+			}
+		}
+	});
+	/* 歷史紀錄 */
+	btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				DrinkHistoryUI frame = new DrinkHistoryUI(p.getUsername(), width);
+				/* 就是對Drink資料庫利用username呈現所有資料 */
+				frame.setVisible(true);
+			}
+		});
+	}
+
+/* 結束FinishUI */
+
+	/* 設一個看不到的TextArea來列印 */
+	JTextArea outprint = new JTextArea();
+	outprint.setBounds(0, 0, 0, 0);
+	/* 利用下方函數畫出表格 */
+	outprint.setText(printout(d[n].getPeach(), d[n].getMelon(), d[n].getBrown(), outputlevel, sum));
+	panel_1.add(outprint);
+	/* 列印按鈕 */
+	btnNewButton_2.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// Create a PrinterJob
+			PrinterJob printerJob = PrinterJob.getPrinterJob();
+
+			// Set the JTextArea as the Printable
+			printerJob.setPrintable(outprint.getPrintable(null, null));
+
+			// Show print dialog
+			if (printerJob.printDialog()) {
+				try {
+					// Print the JTextArea content
+					printerJob.print();
+				} catch (PrinterException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+		}
+	});
+
+	String printout(int peach, int melon, int brown, String peopleLevel, int sum) {
+		/* 加入時間 可利用''修改表示樣式 */
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY'年'MM'月'dd'日'");
+		String nowTime = dateFormat.format(new Date());
+		
+		System.out.println("時間 = " + nowTime);
+		String printdetail = "\n";
+		printdetail += "\t\t　統一發票\n";
+		printdetail += "\t\t　" + nowTime + "\n";
+		printdetail += "  發票號碼：BL" + ((int) (Math.random() * 100000000)) + "\n";
+		printdetail += "  ==============================================\n";
+		printdetail += "  |  商品名稱" + "\t|  數量" + "\t|  單價" + "\t|  金額\t|\n";
+		printdetail += "  －－－－－－－－－－－－－－－－－－－－－－－－－－－\n";
+		printdetail += "  |  密桃奶茶：" + "\t|  " + peach + "\t" + "|  60\t|  " + peach * 60 + "\t|\n";
+		printdetail += "  |  冷露歐雷：" + "\t|  " + melon + "\t" + "|  65\t|  " + melon * 65 + "\t|\n";
+		printdetail += "  |  黑糖鮮奶：" + "\t|  " + brown + "\t" + "|  75\t|  " + brown * 75 + "\t|\n";
+		printdetail += "  ==============================================\n";
+		printdetail += "\t\t\t" + peopleLevel + "\n";
+		printdetail += "\t\t\t 總計：$" + sum + " 元";
+
+		return printdetail;
+	}
