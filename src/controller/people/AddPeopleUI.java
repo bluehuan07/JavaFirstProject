@@ -90,16 +90,18 @@ public class AddPeopleUI extends JFrame {
 		panel_1.setBounds(10, 50, 416, 401);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
-		
 
-		People p = (People)(cal.readFile("peopleError.txt"));
-		
 		JLabel lblNewLabel_1_1 = new JLabel("帳號");
 		lblNewLabel_1_1.setBounds(10, 37, 46, 15);
 		panel_1.add(lblNewLabel_1_1);
 
 		username = new JTextField();
 		username.setBounds(119, 34, 96, 21);
+		if (cal.existsFile("peopleError.txt")) {
+			People p = (People) (cal.readFile("peopleError.txt"));
+			System.out.println("username:"+p.getUsername()+"\tpassword:"+p.getUsername());
+			username.setText(p.getUsername());
+		}
 		panel_1.add(username);
 		username.setColumns(10);
 
@@ -109,6 +111,11 @@ public class AddPeopleUI extends JFrame {
 
 		password = new JTextField();
 		password.setBounds(119, 86, 96, 21);
+		if (cal.existsFile("peopleError.txt")) {
+			People p = (People) (cal.readFile("peopleError.txt"));
+			System.out.println("username:"+p.getUsername()+"\tpassword:"+p.getUsername());
+			password.setText(p.getPassword());
+		}
 		panel_1.add(password);
 		password.setColumns(10);
 
@@ -182,6 +189,7 @@ public class AddPeopleUI extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				String Username = username.getText();
 				People p = new PeopleDaoImpl().queryPeopleByUsername(Username);
 				if (p != null) {
@@ -189,13 +197,15 @@ public class AddPeopleUI extends JFrame {
 					frame.setVisible(true);
 					dispose();
 				} else {
+					cal.deletdFile("peopleError.txt");
 					String Password = password.getText();
 					String Name = name.getText();
 					String Address1 = address1.getText();
 					String Address2 = address2.getText();
 					String Birthday = birthday.getText();
 					String Tel = tel.getText();
-					People p2 = new People(Username, Password, Name, Address1, Address2, Birthday, Tel);
+					String Level = "C";
+					People p2 = new People(Username, Password, Name, Address1, Address2, Birthday, Tel, Level);
 					new PeopleDaoImpl().addPeople(p2);
 					AddPeopleSuccessUI frame = new AddPeopleSuccessUI();
 					frame.setVisible(true);
@@ -208,6 +218,7 @@ public class AddPeopleUI extends JFrame {
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				cal.deletdFile("peopleError.txt");
 				LoginUI frame = new LoginUI();
 				frame.setVisible(true);
 				dispose();

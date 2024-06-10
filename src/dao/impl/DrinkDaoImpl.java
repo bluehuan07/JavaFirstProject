@@ -109,13 +109,13 @@ public class DrinkDaoImpl implements DrinkDao {
 		try {
 			PreparedStatement ps = conn.prepareStatement(SQL);
 			ResultSet rs = ps.executeQuery();
-			show = "帳號\t名字\t密桃奶茶\t冷露歐雷2\t黑糖鮮奶\n";
+			show = "帳號\t名字\t密桃奶茶\t冷露歐雷\t黑糖鮮奶\n";
 			while (rs.next()) {
-				show = show + rs.getString("username")+"\t";
-				show = show + rs.getString("name")+"\t";
-				show = show + rs.getInt("peach")+"\t";
-				show = show + rs.getInt("melon")+"\t";
-				show = show + rs.getInt("brown")+"\n";
+				show = show + rs.getString("username") + "\t";
+				show = show + rs.getString("name") + "\t";
+				show = show + rs.getInt("peach") + "\t";
+				show = show + rs.getInt("melon") + "\t";
+				show = show + rs.getInt("brown") + "\n";
 			}
 			System.out.println("queryAllList Success");
 		} catch (SQLException e) {
@@ -123,6 +123,36 @@ public class DrinkDaoImpl implements DrinkDao {
 			System.out.println("queryAllList Error");
 			e.printStackTrace();
 		}
+		return show;
+	}
+
+	@Override
+	public String queryHistoryByUsername(String username) {
+		Connection conn = DbConnection.getDb();
+		String SQL = "SELECT * FROM blueblue.drink where username = ?;";
+		String show = "";
+
+		try {
+			PreparedStatement ps = conn.prepareStatement(SQL);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			show = " 次數\t名字\t密桃奶茶\t冷露歐雷\t黑糖鮮奶\n";
+			int tmp = 1;
+			while (rs.next()) {
+				show = show + " " + tmp + "\t";
+				show = show + " " + rs.getString("name") + "\t";
+				show = show + " " + rs.getInt("peach") + "\t";
+				show = show + " " + rs.getInt("melon") + "\t";
+				show = show + " " + rs.getInt("brown") + "\n";
+				tmp = tmp + 1;
+			}
+			System.out.println("queryHistoryByUsername Success");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("queryHistoryByUsername Error");
+			e.printStackTrace();
+		}
+
 		return show;
 	}
 

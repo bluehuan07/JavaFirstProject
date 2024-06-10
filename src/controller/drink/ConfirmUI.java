@@ -48,7 +48,7 @@ public class ConfirmUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ConfirmUI() {
-		super("ConfirmUI");
+		super("購物車");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension scrsize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = 450;
@@ -103,6 +103,7 @@ public class ConfirmUI extends JFrame {
 		panel_1.add(lblNewLabel_1_3);
 
 		JTextArea textArea = new JTextArea();
+		textArea.setFont(new Font("微軟正黑體", Font.PLAIN, 14));
 		textArea.setBounds(10, 122, 396, 111);
 		textArea.setEditable(false);
 		panel_1.add(textArea);
@@ -110,27 +111,32 @@ public class ConfirmUI extends JFrame {
 		switch (p.getLevel()) {
 		case "A": {
 			sum = (int) Math.round(sum * 0.7);
+			outputlevel = " 員工打 7 折";
 			break;
 		}
 		case "B": {
 			sum = (int) Math.round(sum * 0.8);
+			outputlevel = " 白金會員打 8 折";
 			break;
 		}
 		case "C": {
 			sum = (int) Math.round(sum * 0.9);
+			outputlevel = " 一般會員打 9 折";
 			break;
 		}
 		}
-		String outputDetail = "密桃奶茶: " + d.getPeach() + " 杯\n";
-		outputDetail = outputDetail + "冷露歐雷: " + d.getMelon() + " 杯\n";
-		outputDetail = outputDetail + "黑糖鮮奶: " + d.getBrown() + " 杯\n";
-		outputDetail = outputDetail + "共: " + sum + " 元";
+
+		String outputDetail = " 密桃奶茶: " + d.getPeach() + " 杯\t60 元\n";
+		outputDetail = outputDetail + " 冷露歐雷: " + d.getMelon() + " 杯\t65 元\n";
+		outputDetail = outputDetail + " 黑糖鮮奶: " + d.getBrown() + " 杯\t75 元\n";
+		outputDetail = outputDetail + outputlevel + " \n";
+		outputDetail = outputDetail + " 共: " + sum + " 元";
 		textArea.setText(outputDetail);
 
 		JButton btnNewButton = new JButton("確認");
 		btnNewButton.setBounds(321, 86, 85, 23);
 		panel_1.add(btnNewButton);
-		
+
 		/* panel_2 按鈕列 */
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(128, 128, 64));
@@ -157,6 +163,9 @@ public class ConfirmUI extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				new DrinkDaoImpl().addDrink(d);
 				FinishUI f = new FinishUI();
 				f.setVisible(true);
@@ -169,6 +178,9 @@ public class ConfirmUI extends JFrame {
 		btnNewButton_2_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				LoginUI frame = new LoginUI();
 				frame.setVisible(true);
 				dispose();
@@ -187,6 +199,9 @@ public class ConfirmUI extends JFrame {
 		btnNewButton_2_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				System.exit(0);
 			}
 		});

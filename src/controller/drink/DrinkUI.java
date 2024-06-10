@@ -132,7 +132,7 @@ public class DrinkUI extends JFrame {
 		}
 		}
 		lblNewLabel_1_2.setText(outputlevel);
-		lblNewLabel_1_2.setBounds(245, 15, 111, 21);
+		lblNewLabel_1_2.setBounds(245, 14, 111, 21);
 		panel_1.add(lblNewLabel_1_2);
 		lblNewLabel_1_2.setFont(new Font("新細明體", Font.BOLD, 14));
 
@@ -142,10 +142,16 @@ public class DrinkUI extends JFrame {
 		panel_1.add(lblNewLabel_1_3);
 
 		peach = new JTextField();
-		peach.setText("1杯60元");
+		if (cal.existsFile("drink.txt")) {
+			Drink d = (Drink) (cal.readFile("drink.txt"));
+			peach.setText("" + d.getPeach());
+		} else {
+			peach.setText("1杯60元");
+			peach.setHorizontalAlignment(JTextField.CENTER);
+			peach.setForeground(Color.gray);
+		}
+		peach.setColumns(10);
 		peach.setBounds(85, 52, 150, 21);
-		peach.setHorizontalAlignment(JTextField.CENTER);
-		peach.setForeground(Color.gray);
 		panel_1.add(peach);
 
 		JLabel lblNewLabel_1_4 = new JLabel("冷露歐雷：");// 65元
@@ -154,11 +160,16 @@ public class DrinkUI extends JFrame {
 		panel_1.add(lblNewLabel_1_4);
 
 		melon = new JTextField();
-		melon.setText("1杯65元");
+		if (cal.existsFile("drink.txt")) {
+			Drink d = (Drink) (cal.readFile("drink.txt"));
+			melon.setText("" + d.getMelon());
+		} else {
+			melon.setText("1杯65元");
+			melon.setHorizontalAlignment(JTextField.CENTER);
+			melon.setForeground(Color.gray);
+		}
 		melon.setColumns(10);
 		melon.setBounds(85, 90, 150, 21);
-		melon.setHorizontalAlignment(JTextField.CENTER);
-		melon.setForeground(Color.gray);
 		panel_1.add(melon);
 
 		JLabel lblNewLabel_1_5 = new JLabel("黑糖鮮奶：");
@@ -167,20 +178,29 @@ public class DrinkUI extends JFrame {
 		panel_1.add(lblNewLabel_1_5);
 
 		brown = new JTextField();
-		brown.setText("1杯75元");
+		if (cal.existsFile("drink.txt")) {
+			Drink d = (Drink) (cal.readFile("drink.txt"));
+			brown.setText("" + d.getBrown());
+		} else {
+			brown.setText("1杯75元");
+			brown.setHorizontalAlignment(JTextField.CENTER);
+			brown.setForeground(Color.gray);
+		}
 		brown.setColumns(10);
 		brown.setBounds(85, 128, 150, 21);
-		brown.setHorizontalAlignment(JTextField.CENTER);
-		brown.setForeground(Color.gray);
 		panel_1.add(brown);
 
-		JButton btnNewButton = new JButton("確定");
+		JButton btnNewButton = new JButton("購物車");
 		btnNewButton.setBounds(245, 127, 111, 23);
 		panel_1.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("重新輸入");
 		btnNewButton_1.setBounds(245, 89, 111, 23);
 		panel_1.add(btnNewButton_1);
+
+		JButton btnNewButton_2 = new JButton("歷史紀錄");
+		btnNewButton_2.setBounds(245, 51, 111, 23);
+		panel_1.add(btnNewButton_2);
 
 		/* panel_2 按鈕列 */
 		JPanel panel_2 = new JPanel();
@@ -264,7 +284,7 @@ public class DrinkUI extends JFrame {
 			}
 		});
 
-		/* 計算價格 */
+		/* 跳到購物車 */
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -313,6 +333,16 @@ public class DrinkUI extends JFrame {
 				brown.setForeground(Color.gray);
 			}
 		});
+
+		/* 歷史紀錄 */ {
+			btnNewButton_2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					DrinkHistoryUI frame = new DrinkHistoryUI(p.getUsername(), width);
+					frame.setVisible(true);
+				}
+			});
+		}
 
 		/** 限定只能輸入數字 **/
 		peach.addKeyListener(new KeyListener() {
@@ -407,6 +437,9 @@ public class DrinkUI extends JFrame {
 		btnNewButton_2_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				LoginUI frame = new LoginUI();
 				frame.setVisible(true);
 				dispose();
@@ -416,6 +449,9 @@ public class DrinkUI extends JFrame {
 		btnNewButton_2_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				LoginSuccessUI frame = new LoginSuccessUI();
 				frame.setVisible(true);
 				dispose();
@@ -425,6 +461,9 @@ public class DrinkUI extends JFrame {
 		btnNewButton_2_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (cal.existsFile("drink.txt")) {
+					cal.deletdFile("drink.txt");
+				}
 				System.exit(0);
 			}
 		});

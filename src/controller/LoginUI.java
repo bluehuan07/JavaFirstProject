@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -37,6 +38,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginUI extends JFrame {
 
@@ -205,7 +208,7 @@ public class LoginUI extends JFrame {
 		panel_3.setLayout(null);
 
 		JButton btnNewButton_3_1 = new JButton("記住帳號");
-		btnNewButton_3_1.setBounds(44, 30, 90, 23);
+		btnNewButton_3_1.setBounds(44, 12, 90, 23);
 		panel_3.add(btnNewButton_3_1);
 		JButton btnNewButton_3_2 = new JButton("忘記帳號");
 		btnNewButton_3_2.setBounds(169, 30, 90, 23);
@@ -213,6 +216,29 @@ public class LoginUI extends JFrame {
 		JButton btnNewButton_3_3 = new JButton("忘記密碼");
 		btnNewButton_3_3.setBounds(294, 30, 90, 23);
 		panel_3.add(btnNewButton_3_3);
+
+		JButton btnNewButton_3_4 = new JButton("取消記住");
+
+		btnNewButton_3_4.setBounds(44, 47, 90, 23);
+		panel_3.add(btnNewButton_3_4);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(new Color(184, 114, 114));
+		panel_4.setBounds(232, 590, 430, 62);
+		contentPane.add(panel_4);
+		panel_4.setLayout(null);
+		
+		JLabel time = new JLabel("");
+		time.setHorizontalAlignment(SwingConstants.CENTER);
+		time.setFont(new Font("微軟正黑體", Font.PLAIN, 15));
+		time.setBounds(81, 10, 267, 42);
+		Timer timer = new Timer(1000, e -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+            String formattedTime = dateFormat.format(new Date());
+            time.setText("現在時間  " + formattedTime);
+        });
+        timer.start();	
+		panel_4.add(time);
 
 		/****************************************/
 		/* 再輸入框中顯示提示字串 */
@@ -278,7 +304,7 @@ public class LoginUI extends JFrame {
 				if (p != null) {
 					System.out.println(p.getPassword());
 					if (p.getPassword().equals(pw)) {
-						if(cal.existsFile("peopleRemember.txt")) {
+						if (cal.existsFile("peopleRemember.txt")) {
 							People pr = (People) (cal.readFile("peopleRemember.txt"));
 							if (!pr.getUsername().equals(p.getUsername())) {
 								cal.deletdFile("peopleRemember.txt");
@@ -294,8 +320,10 @@ public class LoginUI extends JFrame {
 					}
 
 				} else {
+					p = new People();
 					p.setUsername(un);
 					p.setPassword(pw);
+					System.out.println("username:" + p.getUsername() + "\tpassword:" + p.getUsername());
 					cal.saveFile("peopleError.txt", p);
 					LoginErrorUI frame = new LoginErrorUI();
 					frame.setVisible(true);
@@ -315,7 +343,7 @@ public class LoginUI extends JFrame {
 			}
 		});
 
-		/* 跳出提示視窗 */
+		/* 記住帳號 */
 		btnNewButton_3_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String un = username.getText();
@@ -341,6 +369,14 @@ public class LoginUI extends JFrame {
 				JOptionPane.showMessageDialog(LoginUI.this, "001");
 			}
 		});
+		/* 取消記住 */
+		btnNewButton_3_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(cal.existsFile("peopleRemember.txt")) {
+					cal.deletdFile("peopleRemember.txt");
+				}
+			}
+		});
 	}
-
 }

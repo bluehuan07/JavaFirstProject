@@ -17,6 +17,8 @@ public interface DrinkDao {
 	List<Drink> queryAllList();// 全部
 
 	String queryAllString();
+	
+	String queryHistoryByUsername(String username);
 
 	/* update */
 
