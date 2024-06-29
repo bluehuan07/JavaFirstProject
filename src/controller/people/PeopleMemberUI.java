@@ -37,7 +37,6 @@ public class PeopleMemberUI extends JFrame {
 	private JTextField uaddress2;
 	private JTextField ubirthday;
 	private JTextField utel;
-	private JTextField ulevel;
 
 	private JTextField dusername;
 
@@ -250,8 +249,6 @@ public class PeopleMemberUI extends JFrame {
 					p.setBirthday(uBirthday);
 					String uTel = utel.getText();
 					p.setTel(uTel);
-					String uLevel = ulevel.getText();
-					p.setLevel(uLevel);
 					new PeopleDaoImpl().updatePeopleByUsername(p);
 					JOptionPane.showMessageDialog(PeopleMemberUI.this, "修改成功");
 				} else {
